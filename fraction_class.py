@@ -1,8 +1,18 @@
 class Fraction:
 	# This is the constructor which defines the way in which data objects are created
 	def __init__(self, top, bottom):
-		self.num = top
-		self.den = bottom
+		# isinnstance(<var>, int) checks to see whether the variable is an integer or not
+		if isinstance(top, int) & isinstance(bottom, int):
+			self.num = top
+			self.den = bottom
+			if self.den < 0:
+				self.num *= -1
+				self.den *= -1
+			common = gcd(self.num, self.den)
+			self.num = self.num // common
+			self.den = self.den // common
+		else:
+			raise RuntimeError("Both the numerator and denominator need to be integers")
 
 	# Defining a method called show that will allow the Fraction object to print itself as a string
 	def show(self):
@@ -16,9 +26,7 @@ class Fraction:
 	def __add__(self, other_fraction):
 		new_num = self.num * other_fraction.den + self.den * other_fraction.num
 		new_den = self.den * other_fraction.den
-		common = gcd(new_num, new_den)
-		# // is for integer division
-		return Fraction(new_num // common, new_den // common)
+		return Fraction(new_num, new_den)
 
 	# Reedefining the method for deep equality
 	def __eq__(self, other_fraction):
@@ -31,22 +39,53 @@ class Fraction:
 	def __mul__(self, other_fraction):
 		first_num = self.num * other_fraction.num
 		second_num = self.den * other_fraction.den
-		common = gcd(first_num, second_num)
-		return Fraction(first_num // common, second_num // common)
+		return Fraction(first_num, second_num)
 
 	# division: __trudiv__
 	def __truediv__(self, other_fraction):
 		first_num = self.num * other_fraction.den
 		second_num = self.den * other_fraction.num
-		common = gcd(first_num, second_num)
-		return Fraction(first_num // common, second_num // common)
+		return Fraction(first_num, second_num)
 
 	# subtraction: __sub__
 	def __sub__(self, other_fraction):
 		new_num = self.num * other_fraction.den - self.den * other_fraction.num
 		new_den = self.den * other_fraction.den
-		common = gcd(new_num, new_den)
-		return Fraction(new_num // common, new_den // common)
+		return Fraction(new_num, new_den)
+
+	# greater than
+	def __gt__(self, other_fraction):
+		first_num = self.num / self.den
+		second_num = other_fraction.num / other_fraction.den
+		return first_num > second_num
+
+	#less than
+	def __lt__(self, other_fraction):
+		first_num = self.num / self.den
+		second_num = other_fraction.num / other_fraction.den
+		return first_num < second_num
+
+	def __ge__(self, other_fraction):
+		first_num = self.num / self.den
+		second_num = other_fraction.num / other_fraction.den
+		return first_num >= second_num
+
+	def __le__(self, other_fraction):
+		first_num = self.num / self.den
+		second_num = other_fraction.num / other_fraction.den
+		return first_num <= second_num
+
+	def __ne__(self, other_fraction):
+		first_num = self.num / self.den
+		second_num = other_fraction.num / other_fraction.den
+		return first_num != second_num
+
+	# defining simple methods to return the numerator and denominator of the fractions
+	def get_num(self):
+		return self.num
+
+	def get_den(self):
+		return self.den
 
 # This is a GCD (Greatest Common Divisor algorithm) - Implementation of Euclid's Algorithm
 def gcd(m, n):
